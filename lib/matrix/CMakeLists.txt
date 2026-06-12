@@ -13,3 +13,13 @@ target_include_directories(matrix_lib
 )
 
 target_compile_features(matrix_lib PUBLIC cxx_std_17)
+
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+  target_compile_options(matrix_lib PRIVATE -O3 -march=native)
+endif()
+
+install(TARGETS matrix_lib
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+)
+install(DIRECTORY include/ DESTINATION include)
