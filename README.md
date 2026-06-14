@@ -108,12 +108,18 @@ cmake --build . -j$(nproc)
 
 Обучение модели:
 ```bash
-./app/console_app/mnist_console --mode train --data ../data
+./app/console_app/mnist_console train <data_dir> <model_path> [epochs] [lr]
+
+# Пример
+./app/console_app/mnist_console train ../data model.bin 20 0.0001
 ```
 
 Предсказание цифры по изображению:
 ```bash
-./app/console_app/mnist_console --mode predict --image digit.pgm
+./app/console_app/mnist_console predict <model_path> <image_path>
+
+# Пример
+./app/console_app/mnist_console predict model.bin digit.pgm
 ```
 
 ### GUI приложение
@@ -121,11 +127,34 @@ cmake --build . -j$(nproc)
 ./app/gui_app/mnist_gui
 ```
 
+## Оценка точности
+
+Для проверки точности модели на тестовом датасете используйте Python скрипт:
+
+```bash
+cd build
+python3 ../tests/test_mnist.py
+```
+Скрипт извлекает изображения из тестового датасета MNIST, сохраняет их как PGM, выполняет предсказание и выводит процент правильных ответов.
+
+## Результаты обучения
+
+| Параметр | Значение |
+|----------|----------|
+| Архитектура | 784 → 64 → 32 → 10 |
+| Функции активации | ReLU, Softmax |
+| Параметров | 52 650 |
+| Эпох | 20 |
+| Learning rate | 0.0001 |
+| Точность на обучении | 95.9% |
+| Точность на тесте (1000 примеров) | 94.9% |
+| Функция потерь | 0.138 |
+
 ## План разработки
 - [x] **Этап 1**: Структура проекта
 - [x] **Этап 2**: Матричная библиотека с тестами
 - [x] **Этап 3**: Библиотека нейронной сети с тестами
-- [ ] **Этап 4**: Консольное приложение
+- [x] **Этап 4**: Консольное приложение
 - [ ] **Этап 5**: Графическое приложение
 
 ## Лицензия
