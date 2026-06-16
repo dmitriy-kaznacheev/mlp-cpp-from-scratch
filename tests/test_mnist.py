@@ -25,7 +25,7 @@ with open('../data/t10k-images-idx3-ubyte', 'rb') as img_file, \
             out.write(bytes([255 - b for b in img_data]))  # с инверсией цветов
         
         result = subprocess.run(
-            ['./app/console_app/mnist_console', 'predict', 'model.bin', filename],
+            ['./app/console_app/mnist_console', 'predict', '../data/model.bin', filename],
             capture_output=True, text=True
         )
         

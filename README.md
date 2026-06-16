@@ -14,47 +14,58 @@
 
 ## Структура проекта
 ```bash
-├── app                         # приложения
-│   ├── console_app             # консольное
-│   │   └── CMakeLists.txt
-│   └── gui_app                 # графическое (Qt)
-│       └── CMakeLists.txt
-├── CMakeLists.txt
-├── data                        # данные MNIST и сохраненные модели
-│   └── README.md
-├── docs
-├── lib                         # библиотеки
-│   ├── matrix                  # математическая библиотека
-│   │   ├── CMakeLists.txt
-│   │   ├── include
-│   │   │   └── matrix
-│   │   └── src
-│   └── ml                      # библиотека машинного обучения
-│       ├── CMakeLists.txt
-│       ├── include
-│       │   └── ml
-│       └── src
-├── README.md
-└── tests                       # unit-тесты (Google Test)
-    └── CMakeLists.txt
+    ├── app                         **Приложения**
+    │   ├── console_app             **Консольное приложение**
+    │   │   ├── CMakeLists.txt
+    │   │   └── main.cpp
+    │   └── gui_app                 **Графическое приложение (Qt)**
+    │       ├── CMakeLists.txt
+    │       ├── drawingcanvas.cpp   **Холст для рисования**
+    │       ├── drawingcanvas.hpp
+    │       ├── main.cpp
+    │       ├── mainwindow.cpp      **Главное окно**
+    │       ├── mainwindow.hpp
+    │       └── mainwindow.ui       **Интерфейс (Qt Designer)**
+    ├── CMakeLists.txt              **Корневой сценарий сборки**
+    ├── data                        **Данные MNIST и модели**
+    │   ├── model.bin               **Обученная модель**
+    │   ├── README.md
+    │   └── ...
+    ├── docs                        **Документация приложения**
+    │   └── screenshot.png          **Скриншот главного окна GUI**
+    ├── lib                         **Библиотеки**
+    │   ├── matrix                  **Библиотека с матричными операциями**
+    │   │   ├── CMakeLists.txt
+    │   │   ├── include
+    │   │   │   └── matrix
+    │   │   │       └── matrix.hpp  
+    │   │   └── src
+    │   │       └── matrix.cpp
+    │   └── ml                      **Библиотека машинного обучения**
+    │       ├── CMakeLists.txt
+    │       ├── include
+    │       │   └── ml
+    │       │       ├── mnist_loader.hpp    **Загрузчик данных MNIST**
+    │       │       └── neural_network.hpp  **Класс NeuralNetwork**
+    │       └── src
+    │           ├── mnist_loader.cpp
+    │           └── neural_network.cpp
+    ├── README.md                   **Документация проекта**
+    └── tests                       **Тесты**
+        ├── test_matrix.cpp         **Тесты матричной библиотеки**
+        ├── test_mnist_loader.cpp   **Тесты загрузчика данных**
+        ├── test_mnist.py           **Оценка точности на тестовой выборке (Python)**
+        └── test_neural_network.cpp **Тесты нейронной сети**
 ```
 
 ## Данные
 
-Для работы проекта необходимо скачать датасет MNIST и разместить файлы в директории `data/`:
+Для работы проекта необходимо скачать датасет MNIST и разместить файлы в директории `data/`.
 
-### Обучающие данные
-- `train-images-idx3-ubyte` (60 000 изображений)
-- `train-labels-idx1-ubyte` (60 000 меток)
-
-### Тестовые данные
-- `t10k-images-idx3-ubyte` (10 000 изображений)
-- `t10k-labels-idx1-ubyte` (10 000 меток)
-
-Скачать можно по ссылке: http://yann.lecun.com/exdb/mnist/
+Подробная инструкция: [data/README.md](data/README.md)
 
 ### Файлы моделей
-Обученные модели будут сохраняться в директории `data/` в формате `.bin`.
+Обученные модели сохраняются в директории `data/` в формате `.bin`.
 
 ## Требования
 
@@ -127,6 +138,12 @@ cmake --build . -j$(nproc)
 ./app/gui_app/mnist_gui
 ```
 
+#### Главное окно
+
+![Главное окно](docs/screenshot.png)
+
+*Интерфейс: холст для рисования слева, результат и вероятности справа*
+
 ## Оценка точности
 
 Для проверки точности модели на тестовом датасете используйте Python скрипт:
@@ -155,7 +172,7 @@ python3 ../tests/test_mnist.py
 - [x] **Этап 2**: Матричная библиотека с тестами
 - [x] **Этап 3**: Библиотека нейронной сети с тестами
 - [x] **Этап 4**: Консольное приложение
-- [ ] **Этап 5**: Графическое приложение
+- [x] **Этап 5**: Графическое приложение
 
 ## Лицензия
 Проект распространяется под лицензией MIT. <br>
