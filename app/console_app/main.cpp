@@ -79,10 +79,7 @@ void train(const std::string &data_dir, const std::string &model_path,
 }
 
 void predict(const std::string &model_path, const std::string &image_path) {
-  std::vector<LayerConfig> config = {
-      {784, 128, "relu"}, {128, 64, "relu"}, {64, 10, "softmax"}};
-
-  NeuralNetwork network(config);
+  NeuralNetwork network;
   network.load(model_path);
 
   Matrix image = load_pgm_image(image_path);

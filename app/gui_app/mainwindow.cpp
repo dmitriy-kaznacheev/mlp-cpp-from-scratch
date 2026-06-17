@@ -25,9 +25,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
 void MainWindow::loadModel() {
   try {
-    std::vector<ml::LayerConfig> config = {
-        {784, 64, "relu"}, {64, 32, "relu"}, {32, 10, "softmax"}};
-    model_ = std::make_unique<ml::NeuralNetwork>(config);
+    model_ = std::make_unique<ml::NeuralNetwork>();
     model_->load(MODEL_PATH);
     statusBar()->showMessage(QString("Модель загружена: %1").arg(MODEL_PATH));
   } catch (const std::exception &e) {

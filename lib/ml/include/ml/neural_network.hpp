@@ -21,6 +21,7 @@ struct TrainingMetrics {
 
 class NeuralNetwork {
 public:
+  NeuralNetwork() = default;
   explicit NeuralNetwork(const std::vector<LayerConfig> &config);
 
   math::Matrix forward(const math::Matrix &input);

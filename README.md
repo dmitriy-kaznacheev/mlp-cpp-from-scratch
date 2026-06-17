@@ -14,48 +14,48 @@
 
 ## Структура проекта
 ```bash
-    ├── app                         **Приложения**
-    │   ├── console_app             **Консольное приложение**
+    ├── app                         # Приложения
+    │   ├── console_app             # Консольное приложение
     │   │   ├── CMakeLists.txt
     │   │   └── main.cpp
-    │   └── gui_app                 **Графическое приложение (Qt)**
+    │   └── gui_app                 # Графическое приложение (Qt)
     │       ├── CMakeLists.txt
-    │       ├── drawingcanvas.cpp   **Холст для рисования**
+    │       ├── drawingcanvas.cpp   # Холст для рисования
     │       ├── drawingcanvas.hpp
     │       ├── main.cpp
-    │       ├── mainwindow.cpp      **Главное окно**
+    │       ├── mainwindow.cpp      # Главное окно
     │       ├── mainwindow.hpp
-    │       └── mainwindow.ui       **Интерфейс (Qt Designer)**
-    ├── CMakeLists.txt              **Корневой сценарий сборки**
-    ├── data                        **Данные MNIST и модели**
-    │   ├── model.bin               **Обученная модель**
+    │       └── mainwindow.ui       # Интерфейс (Qt Designer)
+    ├── CMakeLists.txt              # Корневой сценарий сборки
+    ├── data                        # Данные MNIST и модели
+    │   ├── model.bin               # Обученная модель
     │   ├── README.md
     │   └── ...
-    ├── docs                        **Документация приложения**
-    │   └── screenshot.png          **Скриншот главного окна GUI**
-    ├── lib                         **Библиотеки**
-    │   ├── matrix                  **Библиотека с матричными операциями**
+    ├── docs                        # Документация приложения
+    │   └── screenshot.png          # Скриншот главного окна GUI
+    ├── lib                         # Библиотеки
+    │   ├── matrix                  # Библиотека с матричными операциями
     │   │   ├── CMakeLists.txt
     │   │   ├── include
     │   │   │   └── matrix
     │   │   │       └── matrix.hpp  
     │   │   └── src
     │   │       └── matrix.cpp
-    │   └── ml                      **Библиотека машинного обучения**
+    │   └── ml                      # Библиотека машинного обучения**
     │       ├── CMakeLists.txt
     │       ├── include
     │       │   └── ml
-    │       │       ├── mnist_loader.hpp    **Загрузчик данных MNIST**
-    │       │       └── neural_network.hpp  **Класс NeuralNetwork**
+    │       │       ├── mnist_loader.hpp      # Загрузчик данных MNIST
+    │       │       └── neural_network.hpp    # Класс NeuralNetwork
     │       └── src
     │           ├── mnist_loader.cpp
     │           └── neural_network.cpp
-    ├── README.md                   **Документация проекта**
-    └── tests                       **Тесты**
-        ├── test_matrix.cpp         **Тесты матричной библиотеки**
-        ├── test_mnist_loader.cpp   **Тесты загрузчика данных**
-        ├── test_mnist.py           **Оценка точности на тестовой выборке (Python)**
-        └── test_neural_network.cpp **Тесты нейронной сети**
+    ├── README.md                   # Документация проекта
+    └── tests                       # Тесты
+        ├── test_matrix.cpp         # Тесты матричной библиотеки
+        ├── test_mnist_loader.cpp   # Тесты загрузчика данных
+        ├── test_mnist.py           # Оценка точности на тестовой выборке (Python)
+        └── test_neural_network.cpp # Тесты нейронной сети
 ```
 
 ## Данные
@@ -122,7 +122,7 @@ cmake --build . -j$(nproc)
 ./app/console_app/mnist_console train <data_dir> <model_path> [epochs] [lr]
 
 # Пример
-./app/console_app/mnist_console train ../data model.bin 20 0.0001
+./app/console_app/mnist_console train ../data ../data/model.bin 25 0.0001
 ```
 
 Предсказание цифры по изображению:
@@ -130,7 +130,7 @@ cmake --build . -j$(nproc)
 ./app/console_app/mnist_console predict <model_path> <image_path>
 
 # Пример
-./app/console_app/mnist_console predict model.bin digit.pgm
+./app/console_app/mnist_console predict ../data/model.bin digit.pgm
 ```
 
 ### GUI приложение
@@ -161,11 +161,11 @@ python3 ../tests/test_mnist.py
 | Архитектура | 784 → 64 → 32 → 10 |
 | Функции активации | ReLU, Softmax |
 | Параметров | 52 650 |
-| Эпох | 20 |
-| Learning rate | 0.0001 |
-| Точность на обучении | 95.9% |
-| Точность на тесте (1000 примеров) | 94.9% |
-| Функция потерь | 0.138 |
+| Количество эпох | 25 |
+| Скорость обучения | 0.0001 |
+| Точность на обучении | 96.7% |
+| Точность на тесте (1000 примеров) | 95.9% |
+| Функция потерь | 0.113 |
 
 ## План разработки
 - [x] **Этап 1**: Структура проекта

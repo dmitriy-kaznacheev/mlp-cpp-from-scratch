@@ -223,6 +223,12 @@ void NeuralNetwork::save(const std::string &filepath) const {
   file.write(reinterpret_cast<const char *>(&num_layers), sizeof(num_layers));
 
   for (size_t i = 0; i < num_layers; ++i) {
+    size_t input_size = weights_[i].cols();
+    size_t output_size = weights_[i].rows();
+    file.write(reinterpret_cast<const char *>(&input_size), sizeof(input_size));
+    file.write(reinterpret_cast<const char *>(&output_size),
+               sizeof(output_size));
+
     weights_[i].save_binary(file);
     biases_[i].save_binary(file);
 
@@ -246,8 +252,22 @@ void NeuralNetwork::load(const std::string &filepath) {
   activations_.clear();
 
   for (size_t i = 0; i < num_layers; ++i) {
+    size_t input_size, output_size;
+    file.read(reinterpret_cast<char *>(&input_size), sizeof(input_size));
+    file.read(reinterpret_cast<char *>(&output_size), sizeof(output_size));
+
     weights_.push_back(math::Matrix::load_binary(file));
     biases_.push_back(math::Matrix::load_binary(file));
+
+    // проверка целостности
+    if ((weights_.back().cols() != input_size) ||
+        (weights_.back().rows() != output_size)) {
+      throw std::runtime_error("Model file corrupted: layer size mismatch");
+    }
+    if ((biases_.back().rows() != output_size) ||
+        (biases_.back().cols() != 1)) {
+      throw std::runtime_error("Model file corrupted: bias size mismatch");
+    }
 
     size_t act_len;
     file.read(reinterpret_cast<char *>(&act_len), sizeof(act_len));
@@ -264,7 +284,7 @@ void NeuralNetwork::initialize_weights(const std::vector<LayerConfig> &config) {
 
   for (const auto &layer : config) {
     // Xavier/Glorot инициализация
-    //   предел: sqrt(6 / (fan_in + fan_out))
+    //   limit: sqrt(6 / (fan_in + fan_out))
     //   для равномерного распределения U(-limit, limit)
     double limit = std::sqrt(6.0 / (layer.input_size + layer.output_size));
     std::uniform_real_distribution<double> dis(-limit, limit);

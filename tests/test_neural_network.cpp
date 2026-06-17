@@ -28,7 +28,7 @@ TEST_F(NeuralNetworkTest, constructor) {
 }
 
 TEST_F(NeuralNetworkTest, constructor_empty_config) {
-  EXPECT_THROW(NeuralNetwork({}), std::invalid_argument);
+  EXPECT_THROW(NeuralNetwork(std::vector<LayerConfig>{}), std::invalid_argument);
 }
 
 TEST_F(NeuralNetworkTest, forward) {
