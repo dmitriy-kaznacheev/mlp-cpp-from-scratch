@@ -4,6 +4,7 @@
 #include <cmath>
 #include <cstring>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -49,6 +50,41 @@ Matrix load_pgm_image(const std::string &filepath) {
   return img;
 }
 
+void evaluate_model(const NeuralNetwork &network, const std::string &data_dir) {
+  std::cout << "\nEvaluating on test dataset...\n";
+
+  auto test_data = ml::MNISTLoader::load_dataset(
+      data_dir + "/t10k-images-idx3-ubyte",
+      data_dir + "/t10k-labels-idx1-ubyte", 10000);
+
+  double test_accuracy = network.evaluate(test_data.images, test_data.labels);
+  std::cout << "Test accuracy: " << test_accuracy * 100 << "%\n";
+
+  auto cm = network.confusion_matrix(test_data.images, test_data.labels);
+
+  std::cout << "\nConfusion Matrix:\n";
+  std::cout << "    ";
+  for (int j = 0; j < NeuralNetwork::NUM_CLASSES; ++j) {
+    std::cout << std::setw(5) << j;
+  }
+  std::cout << "  | Total\n";
+
+  for (int i = 0; i < NeuralNetwork::NUM_CLASSES; ++i) {
+    std::cout << std::setw(2) << i << " |";
+    int row_sum = 0;
+    for (int j = 0; j < NeuralNetwork::NUM_CLASSES; ++j) {
+      row_sum += cm[i][j];
+      if (cm[i][j] > 0) {
+        std::cout << std::setw(5) << cm[i][j];
+      } else {
+        std::cout << "     ";
+      }
+    }
+    std::cout << "  | " << cm[i][i] << "/" << row_sum;
+    std::cout << "\n";
+  }
+}
+
 void train(const std::string &data_dir, const std::string &model_path,
            size_t epochs, double lr) {
   std::cout << "Loading MNIST dataset...\n";
@@ -68,14 +104,22 @@ void train(const std::string &data_dir, const std::string &model_path,
   std::cout << "Parameters: " << network.num_parameters() << "\n";
   std::cout << "Training " << epochs << " epochs, lr=" << lr << "...\n\n";
 
-  network.train(dataset.images, targets, epochs, lr, 64,
-                [](const TrainingMetrics &m) {
-                  std::cout << "Epoch " << m.epoch << " | Loss: " << m.loss
-                            << " | Accuracy: " << m.accuracy * 100 << "%\n";
-                });
+  network.train(
+      dataset.images, targets, epochs, lr, 64, [](const TrainingMetrics &m) {
+        std::cout << "Epoch " << std::setw(2) << m.epoch
+                  << " | Loss: " << std::setw(10) << std::fixed
+                  << std::setprecision(6) << m.loss
+                  << " | Accuracy: " << std::setw(7) << std::fixed
+                  << std::setprecision(2) << m.accuracy * 100 << "%\n";
+
+        static std::ofstream log("../docs/training.log");
+        log << m.epoch << " " << m.loss << " " << m.accuracy * 100 << "\n";
+      });
 
   network.save(model_path);
   std::cout << "\nModel saved to " << model_path << "\n";
+
+  evaluate_model(network, data_dir);
 }
 
 void predict(const std::string &model_path, const std::string &image_path) {

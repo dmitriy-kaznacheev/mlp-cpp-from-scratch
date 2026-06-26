@@ -15,7 +15,7 @@ NeuralNetwork::NeuralNetwork(const std::vector<LayerConfig> &config) {
   initialize_weights(config);
 }
 
-math::Matrix NeuralNetwork::forward(const math::Matrix &input) {
+math::Matrix NeuralNetwork::forward(const math::Matrix &input) const {
   layer_inputs_.clear();
   layer_outputs_.clear();
 
@@ -165,7 +165,7 @@ NeuralNetwork::train(const std::vector<math::Matrix> &inputs,
   return metrics;
 }
 
-int NeuralNetwork::predict(const math::Matrix &input) {
+int NeuralNetwork::predict(const math::Matrix &input) const {
   // прямой проход
   math::Matrix output = forward(input);
 
@@ -174,7 +174,8 @@ int NeuralNetwork::predict(const math::Matrix &input) {
       output.begin(), std::max_element(output.begin(), output.end())));
 }
 
-std::vector<double> NeuralNetwork::predict_proba(const math::Matrix &input) {
+std::vector<double>
+NeuralNetwork::predict_proba(const math::Matrix &input) const {
   // прямой проход
   math::Matrix output = forward(input);
 
@@ -183,7 +184,7 @@ std::vector<double> NeuralNetwork::predict_proba(const math::Matrix &input) {
 }
 
 double NeuralNetwork::evaluate(const std::vector<math::Matrix> &inputs,
-                               const std::vector<int> &labels) {
+                               const std::vector<int> &labels) const {
   size_t correct = 0;
 
   // сравнение предсказания с истинной меткой для каждого примера
@@ -211,6 +212,21 @@ size_t NeuralNetwork::num_parameters() const {
   }
 
   return count;
+}
+
+std::vector<std::vector<int>>
+NeuralNetwork::confusion_matrix(const std::vector<math::Matrix> &inputs,
+                                const std::vector<int> &labels) const {
+  std::vector<std::vector<int>> matrix(NUM_CLASSES,
+                                       std::vector<int>(NUM_CLASSES, 0));
+
+  for (size_t i = 0; i < inputs.size(); ++i) {
+    int pred = predict(inputs[i]);
+    int actual = labels[i];
+    matrix[actual][pred]++;
+  }
+
+  return matrix;
 }
 
 void NeuralNetwork::save(const std::string &filepath) const {

@@ -24,7 +24,7 @@ public:
   NeuralNetwork() = default;
   explicit NeuralNetwork(const std::vector<LayerConfig> &config);
 
-  math::Matrix forward(const math::Matrix &input);
+  math::Matrix forward(const math::Matrix &input) const;
   void backward(const math::Matrix &input, const math::Matrix &target,
                 double learning_rate);
 
@@ -34,16 +34,23 @@ public:
         double learning_rate, size_t batch_size = 32,
         std::function<void(const TrainingMetrics &)> callback = nullptr);
 
-  int predict(const math::Matrix &input);
-  std::vector<double> predict_proba(const math::Matrix &input);
+  int predict(const math::Matrix &input) const;
+  std::vector<double> predict_proba(const math::Matrix &input) const;
   double evaluate(const std::vector<math::Matrix> &inputs,
-                  const std::vector<int> &labels);
+                  const std::vector<int> &labels) const;
 
   void save(const std::string &filepath) const;
   void load(const std::string &filepath);
 
   size_t num_layers() const { return weights_.size(); }
   size_t num_parameters() const;
+
+  std::vector<std::vector<int>>
+  confusion_matrix(const std::vector<math::Matrix> &inputs,
+                   const std::vector<int> &labels) const;
+
+public:
+  static constexpr int NUM_CLASSES = 10;
 
 private:
   std::vector<math::Matrix> weights_;
