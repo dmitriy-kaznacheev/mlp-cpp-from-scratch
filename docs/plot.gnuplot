@@ -1,18 +1,22 @@
-set terminal pngcairo size 800,400 enhanced font 'DejaVu Sans,12'
+set terminal pngcairo size 800,800 enhanced font 'DejaVu Sans,12'
 set output 'training_plot.png'
 
-set multiplot layout 1,2
+set multiplot layout 2,1
 
-set title 'Функция потерь (Loss)'
-set xlabel 'Эпоха'
-set ylabel 'Loss'
+# График Loss
+set title 'Функция потерь (Loss)' font 'DejaVu Sans,14'
+set xlabel 'Эпоха' font 'DejaVu Sans,12'
+set ylabel 'Loss' font 'DejaVu Sans,12'
 set grid
-plot 'training.log' using 1:2 with lines lw 2 lc rgb '#4CAF50' title 'Loss'
+set key top right
+plot 'training.log' using 1:2 with lines lw 2.5 lc rgb '#4CAF50' title 'Loss'
 
-set title 'Точность (Accuracy)'
-set xlabel 'Эпоха'
-set ylabel 'Accuracy, %'
+# График Accuracy
+set title 'Точность (Accuracy)' font 'DejaVu Sans,14'
+set xlabel 'Эпоха' font 'DejaVu Sans,12'
+set ylabel 'Accuracy, %' font 'DejaVu Sans,12'
 set grid
-plot 'training.log' using 1:3 with lines lw 2 lc rgb '#2196F3' title 'Accuracy'
+set key bottom right
+plot 'training.log' using 1:3 with lines lw 2.5 lc rgb '#2196F3' title 'Accuracy'
 
 unset multiplot
